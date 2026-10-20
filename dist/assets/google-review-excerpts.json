@@ -1,0 +1,32 @@
+[
+  {
+    "location": "university",
+    "reviewer": "A G",
+    "rating": 5,
+    "relative_date": "3 months ago",
+    "source_url": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvT2xRNFgwSnJjazFxWkV0M1NtbHJhakpXV0ZGblkwRRAB!2m1!1s0x0:0x8851b1ed53b92bc5!3m1!1s2@1:CAIQACodChtycF9oOlQ4X0Jrck1qZEt3SmlrajJWWFFnY0E%7C%7C?hl=en-US",
+    "profile_url": "https://maps.app.goo.gl/p7jUxpA27JVrSJE8A",
+    "excerpt": "He takes his time and cuts with precision and care!",
+    "excerpt_words": 10
+  },
+  {
+    "location": "apache",
+    "reviewer": "Aarnavk18",
+    "rating": 5,
+    "relative_date": "5 months ago",
+    "source_url": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvT2xCak56azRlVzlwUXpFeVMwOVpWSHBXUlRaclFVRRAB!2m1!1s0x0:0x9bf099afc0e723b3!3m1!1s2@1:CAIQACodChtycF9oOlBjNzk4eW9pQzEyS09ZVHpWRTZrQUE%7C%7C?hl=en-US",
+    "profile_url": "https://maps.app.goo.gl/gHPzs5XtrV3V4uKU7",
+    "excerpt": "Dom did an amazing job. Super professional, easy to talk to, and clearly knows what he’s doing.",
+    "excerpt_words": 17
+  },
+  {
+    "location": "scottsdale",
+    "reviewer": "Indraja Patil",
+    "rating": 5,
+    "relative_date": "a month ago",
+    "source_url": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvT2w5VlNWOHhSMUUwT1Y5Mk9IQjZUMVJaWTJKbFltYxAB!2m1!1s0x0:0x33bd4edc867dfccf!3m1!1s2@1:CAIQACodChtycF9oOl9VSV8xR1E0OV92OHB6T1RZY2JlYmc%7C%7C?hl=en-US",
+    "profile_url": "https://maps.app.goo.gl/8YHHavNPa6QAou7g6",
+    "excerpt": "Absolutely amazing haircut and the hair style!",
+    "excerpt_words": 7
+  }
+]

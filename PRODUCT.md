@@ -1,0 +1,4 @@
+# Hairflix
+A conversion-focused redesign for the real Hairflix barbershop business using the earlier mobile template structure with Hairflix's charcoal/red identity. Primary action: new booking at a chosen location with a $5 deposit. Secondary: real haircut work, Google reviews, directions and the correct shop phone.
+Three verified Google listings: University Tempe, Apache Tempe (by Vodi), Scottsdale. Facts and imagery live in /workspace/hairflix-research. No invented reviews, prices, qualifications or availability. New booking API must protect slots, customer data and payment status. Payment account awaiting user. Marketing opt-in separate and optional. Existing SQUIRE calendar is not automatically synchronized.
+Target repository: https://github.com/MrMounters/hairflix. Keep Christina project separate.
