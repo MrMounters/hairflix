@@ -12,3 +12,9 @@
 .stars{display:inline-flex;align-items:center;vertical-align:middle}.stars svg{display:block;width:80px;height:16px;fill:currentColor}
 @media(min-width:701px) and (max-width:1100px){.hero h1{font-size:clamp(60px,7.5vw,88px)}}
 @media(max-width:700px){.hero-photos figcaption,.service-price small{font-size:13px}}
+
+/* A quiet maker's signature, matched to Hairflix's charcoal palette. */
+.maker-signoff{display:flex;justify-content:flex-end;padding-top:12px}
+.maker-credit{display:flex;flex-direction:column;align-items:flex-end;justify-content:center;gap:2px;min-height:48px;font-size:14px;line-height:1.5;color:var(--light-note)}
+.maker-credit>span:last-child{display:flex;align-items:center;gap:5px}.maker-credit strong{font-weight:600;color:var(--cream,#f4f0e6)}.maker-credit .icon{width:14px;height:14px}.maker-credit:hover strong{text-decoration:underline;text-underline-offset:4px}
+@media(max-width:700px){.maker-signoff{justify-content:flex-start}.maker-credit{align-items:flex-start}}
