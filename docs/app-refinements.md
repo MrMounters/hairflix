@@ -29,3 +29,14 @@ Validation: 14 automated tests pass (including deposit rounding/capping, Arizona
 /login/ is the role-selection screen for Customer, Barber Pro, and Owner HQ. /app/ requires a preview choice and remembers it for the browser session. Switch workspace returns to /login/. This remains preview navigation, not authentication or a permission boundary.
 
 Three AI-generated, fictional side-profile customer photos populate the barber portfolios once without replacing existing uploaded work. Each work card shows its barber's portrait and name at the top right and marks synthetic samples as fictional. The signed-in preview barber's portrait also appears in the app header. No customer photos are added to calendar client names.
+
+## Booking and conversation updates
+- Manual bookings offer Appointment and Walk-in. Appointments show date and time; walk-ins use the next slot today and retain conflict checks.
+- Messages use the existing app inbox, with client photos, recency ordering, an Unread filter, blue dots and initial red counts of 3, 1 and 1 per barber workspace.
+- Reading a thread clears only that viewer's unread state. Customer and assigned barber reads update receipts across browser tabs; owner reads do not impersonate a barber read.
+- Staff can create a booking from a conversation. Booking and reschedule cards retain the time posted, while the latest card offers the existing appointment controls. Customer booking confirmations also post to the conversation.
+- Staff and portfolio photos display complete images, and availability labels use normal text.
+
+Validation: existing Node suites and messaging state tests; Chromium checks for initial badges, badge clearing, creation and rescheduling from chat, saved booking dates, two-tab Delivered → Read transitions in both directions, walk-in persistence, and a 390px layout without horizontal overflow. No JavaScript errors in those browser flows.
+
+Messaging and these workspace bookings continue to use browser-local storage. They synchronize between tabs on the same origin, not between different devices or authenticated accounts.
