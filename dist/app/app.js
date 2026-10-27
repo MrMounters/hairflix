@@ -26,7 +26,7 @@ function S(){const list=selectedServices();return {id:list[0]?.id,name:list.map(
 function bookingDuration(b){return b.bookedServices?.reduce((n,s)=>n+s.min,0)||b.durationMin||services.find(s=>s.id===b.service)?.min||30;}
 function bookingName(b){return b.bookedServices?.map(s=>s.name).join(' + ')||services.find(s=>s.id===b.service)?.name||'Visit';}
 
-const photo=(b,cls='avatar')=>`<img class="${cls}" src="assets/${esc(b.img)}" alt="${esc(b.name)}" loading="lazy">`;
+const photo=(b,cls='avatar')=>['lara.png','jose.png'].includes(b.img)?`<span class="${cls} staff-photo" role="img" aria-label="${esc(b.name)}, barber" style="background-image:url('assets/${esc(b.img)}');background-position:${b.focus||'center'}"></span>`:`<img class="${cls}" src="assets/${esc(b.img)}" alt="${esc(b.name)}" loading="lazy">`;
 const logo=()=>`<div><div class="logo">HAIRFL<span class="pole">I</span>X</div><div class="brand-caption">Barbershop · ${shops[extras.location||'scottsdale'].name}</div></div>`;
 const button=(label,action,cls='',extra='')=>`<button class="btn ${cls}" data-action="${action}" ${extra}>${label}</button>`;
 const footnote=()=>'';
