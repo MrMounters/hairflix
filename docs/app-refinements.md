@@ -55,3 +55,10 @@ Validation: Node suites; Chromium at 390×844 checked service selection without 
 
 ## Mobile inbox sizing and appointment-time correction
 The message page's flex child combined auto margins with an unconstrained inbox list, producing a narrow centered column and horizontal overflow. Explicit full-width flex children and constrained previews restore the phone layout. The viewport includes iOS safe areas; form controls use a 16px mobile font to avoid focus-induced Safari zoom. Page scrolling remains available. Available quarter-hour booking starts are grouped into morning, afternoon and evening, without disabled filler or a clipped nested time grid. Selecting a barber uses that barber's advertised date when it is still in the future.
+
+## Appointment-first ticket workflow
+Barber navigation is Today, Calendar, Messages and Account. Daily cards and calendar rows open appointment details, an in-progress ticket or a completed receipt. A context-aware Back control restores the source view, selected date and scroll position. The legacy ticket route resolves to Calendar rather than a separate ticket directory.
+
+Completed visits are scoped to the selected day and assigned barber. The amount in parentheses sums recorded settlements matching the approved total, including tips; approved-but-unpaid totals remain outstanding. Staff may explicitly record a cash payment from the receipt. The requested illustrative 9 AM $32 + $20 tip fixture is recorded as a cash example; it does not create a Stripe charge. Browser-only approval never automatically marks other visits paid.
+
+Validation includes closeout totals excluding other dates/barbers, cancellations and unpaid/mismatched settlements; mobile navigation from Today through appointment/check-in/ticket and back, completed receipts, and preservation of the Calendar date.
