@@ -1,0 +1,10 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+await import('../dist/app/app-rules.js');
+const R=globalThis.HFAppRules;
+const p=R.validatePolicy({enabled:true,mode:'fixed',amount:10,noticeHours:12,reschedule:true,rescheduleHours:12});
+const b={date:'2026-11-20',time:'3:15 PM',barber:'watkins',client:'John B.'};
+test('prepayment modes round cents and fixed deposits cannot exceed service total',()=>{assert.equal(R.depositCents(3500,p),1000);assert.equal(R.depositCents(500,p),500);assert.equal(R.depositCents(3500,{...p,mode:'full'}),3500);assert.equal(R.depositCents(3333,{...p,mode:'percent',amount:25}),833);assert.equal(R.depositCents(3500,{...p,enabled:false}),0);assert.throws(()=>R.validatePolicy({...p,mode:'percent',amount:101}));});
+test('12-hour cancellation boundary uses Arizona time, independent of machine timezone',()=>{assert.equal(R.appointmentAt(b),Date.parse('2026-11-20T22:15:00Z'));const boundary=Date.parse('2026-11-20T10:15:00Z');assert.equal(R.cancellation(b,p,boundary).free,true);assert.equal(R.cancellation(b,p,boundary+1).free,false);assert.equal(R.cancellation(b,p,boundary-1000).remaining,1000);});
+test('customer rescheduling obeys policy while staff can arrange exceptions',()=>{const late=R.appointmentAt(b)-3600000;assert.equal(R.reschedulable(b,p,'Customer',late),false);assert.equal(R.reschedulable(b,p,'Barber Pro',late),true);assert.equal(R.reschedulable(b,{...p,reschedule:false},'Customer',0),false);});
+test('appointment access distinguishes owner, assigned barber, and customer',()=>{assert.equal(R.accessible(b,'Owner HQ','alex'),true);assert.equal(R.accessible(b,'Barber Pro','watkins'),true);assert.equal(R.accessible(b,'Barber Pro','alex'),false);assert.equal(R.accessible({...b,client:'Another client'},'Customer','alex'),false);assert.equal(R.accessible(b,'Customer','alex'),true);});
