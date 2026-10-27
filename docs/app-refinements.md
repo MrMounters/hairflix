@@ -23,3 +23,9 @@ Owner booking policy supports optional full, fixed-dollar or percentage prepayme
 Owner compensation records support commission splits or daily/weekly/monthly chair rent. Monthly collection dates 29–31 use the last day in shorter months as the disclosed agreement convention; actual collection is not implemented. Card, Apple Pay, Google Pay, Cash App Pay and cash are configurable proposed methods, not active integrations.
 
 Validation: 14 automated tests pass (including deposit rounding/capping, Arizona cutoff boundaries, rescheduling policy and record access). Chromium integration exercises personal-menu isolation, custom price/time selection, photo compression/upload, private notes, explicit sharing/approval, policy/rental persistence, customer rescheduling/cancellation/countdowns, pending-prepayment totals, demo openings and all 54 original screens; mobile service selection has no horizontal overflow.
+
+## Workspace entry and sample portfolios
+
+/login/ is the role-selection screen for Customer, Barber Pro, and Owner HQ. /app/ requires a preview choice and remembers it for the browser session. Switch workspace returns to /login/. This remains preview navigation, not authentication or a permission boundary.
+
+Three AI-generated, fictional side-profile customer photos populate the barber portfolios once without replacing existing uploaded work. Each work card shows its barber's portrait and name at the top right and marks synthetic samples as fictional. The signed-in preview barber's portrait also appears in the app header. No customer photos are added to calendar client names.
