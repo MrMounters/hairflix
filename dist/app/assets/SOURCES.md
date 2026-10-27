@@ -10,3 +10,6 @@ Fonts from Google Fonts: Manrope, Cormorant Garamond. Authored SVG interface ico
 - lara.png: user-supplied photo of Lara cutting a client's hair.
 - jose.png: user-supplied photo of Jose cutting a client's hair.
 Original files preserved; interface background framing focuses on the staff member.
+
+## Fictional customer profiles
+The existing generated demo-cut-lara.png, demo-cut-jose.png and demo-cut-watkins.png haircut images also identify the fictional customer profiles throughout staff messages and appointments. These images depict fictional haircut clients, not the named barbers. Customer identities stay consistent across screens; owner views pair the client image with the assigned staff photo.

@@ -40,3 +40,6 @@ Three AI-generated, fictional side-profile customer photos populate the barber p
 Validation: existing Node suites and messaging state tests; Chromium checks for initial badges, badge clearing, creation and rescheduling from chat, saved booking dates, two-tab Delivered → Read transitions in both directions, walk-in persistence, and a 390px layout without horizontal overflow. No JavaScript errors in those browser flows.
 
 Messaging and these workspace bookings continue to use browser-local storage. They synchronize between tabs on the same origin, not between different devices or authenticated accounts.
+
+### Customer portraits and normal opening labels
+Generated haircut portraits now identify fictional clients consistently in the barber inbox, calendar, daily schedule, ticket lists and appointment cards. Owner appointment and conversation views show the customer and assigned barber as overlapping portraits; unknown clients receive their own initials. Opening labels show the next future slot that fits the service duration and recorded conflicts, with no demo wording or repeated barber name.
