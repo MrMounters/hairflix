@@ -59,7 +59,7 @@ function myBookings(){const list=[...bookings].filter(b=>b.client==='John B.').s
 const clientRecords=[{name:'John B.',visits:8,note:'Low taper. Keep length on top.',img:'demo-cut-lara.png'},{name:'Alex Morgan',visits:5,note:'Scissor cut, natural finish.',img:'demo-cut-watkins.png'},{name:'Ryan Smith',visits:3,note:'Beard sculpt. Prefers morning appointments.',img:'demo-cut-jose.png'}];
 function clientPhoto(name,cls='avatar customer-portrait'){
  const client=clientRecords.find(c=>c.name===name);
- if(client)return photo(client,cls);
+ if(client?.img)return photo(client,cls);
  const initials=String(name||'Client').trim().split(/\s+/).slice(0,2).map(s=>s[0]).join('').toUpperCase();
  return `<span class="account-initials customer-portrait ${esc(cls)}" role="img" aria-label="${esc(name||'Client')}">${esc(initials)}</span>`;
 }

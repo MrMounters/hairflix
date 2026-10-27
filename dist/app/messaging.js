@@ -7,7 +7,7 @@ function messageRead(m,t){const recipient=m.role==='Customer'?(t.kind==='general
 function readThread(t){let changed=false;for(const m of t.messages){m.readBy=m.readBy||[];if(!m.readBy.includes(messageViewer())){m.readBy.push(messageViewer());changed=true;}}if(changed)save();}
 function postAppointment(t,b,title){if(!t)return;t.messages.push({role:state.role,name:state.role==='Customer'?'John B.':state.role==='Barber Pro'?activeStaff().name:'Shop owner',body:title,at:Date.now(),delivered:true,readBy:[messageViewer()],appointment:{id:b.id,title,date:b.date,time:b.time,service:bookingName(b),location:b.location}});}
 function walkInTime(){const parts=Object.fromEntries(new Intl.DateTimeFormat('en-US',{timeZone:'America/Phoenix',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date()).map(p=>[p.type,p.value]));const now=Number(parts.hour)*60+Number(parts.minute);const time=times.find(t=>minutes(t)>=now);if(!time)throw Error('No walk-in times remain today. Choose an appointment.');return time;}
-if(!clientRecords.some(c=>c.name==='Marcus Reed'))clientRecords.push({name:'Marcus Reed',visits:2,note:'Fictional client · textured crop.',img:'demo-cut-jose.png'},{name:'Daniel Lee',visits:4,note:'Fictional client · classic taper.',img:'demo-cut-lara.png'});
+if(!clientRecords.some(c=>c.name==='Marcus Reed'))clientRecords.push({name:'Marcus Reed',visits:0,note:'First visit · textured crop.',img:null},{name:'Daniel Lee',visits:4,note:'Classic taper.',img:null});
 if(!extras.messagingSeeded){
  const now=Date.now();
  for(const barber of barbers){
