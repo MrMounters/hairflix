@@ -1,5 +1,7 @@
 # Stripe Connect sandbox setup
 
+> Current app mode: interactive financial preview. Owner/barber panels show sample balances, settings and simulated payouts without calling Stripe or requiring any credentials. The backend below is retained for a future explicit integration; this guide is not required to use the preview. Preview payout records never update real ticket settlements.
+
 Hairflix is the first merchant using the SaaS. The SaaS platform's Stripe account owns the Connect integration; Hairflix and independent barbers onboard as connected merchants. A separate standalone Hairflix Stripe account does not, by itself, mean that it is connected to the platform.
 
 ## What this change delivers

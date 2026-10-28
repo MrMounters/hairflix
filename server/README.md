@@ -35,4 +35,4 @@ Until production activation the website offers the verified shop phone numbers a
 
 ## Stripe Connect sandbox
 
-Owner and independent-barber onboarding/payout panels use a separate sandbox-only backend. Follow [the full sandbox setup guide](../docs/stripe-connect-sandbox.md). The public role selector does not grant access to financial accounts. This does not activate the standalone booking/deposit flow or connect browser-local tickets to payment settlement.
+The current owner/barber payout panels are an interactive browser-local preview and do not call Stripe. A separate sandbox-only backend is retained for future integration. Follow [the full sandbox setup guide](../docs/stripe-connect-sandbox.md). The public role selector does not grant access to financial accounts. This does not activate the standalone booking/deposit flow or connect browser-local tickets to payment settlement.
