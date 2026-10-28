@@ -1,0 +1,18 @@
+/* Barber Pro shares the customer and owner design language. */
+const navigationBeforeBarber=navItems;
+navItems=function(){return state.role==='Barber Pro'?[['home','home','Today'],['pCalendar','calendar','Calendar'],['manualBooking','plus','Add booking'],['pMessages','message','Messages'],['more','users','Account']]:navigationBeforeBarber();};
+proHome=function(){const list=bookings.filter(b=>b.barber===activeBarberId()&&b.date===state.calendarDate&&b.status!=='cancelled'),closed=closedVisitTotals(bookings,state.calendarDate,activeBarberId());return `${head('Your chair. Your day.',`${esc(activeStaff().name)} · ${pretty(state.calendarDate,{weekday:'long',month:'short',day:'numeric'})}`)}<section class="barber-summary panel"><div><span>Completed visits</span><strong>${closed.completed} (${cents(closed.collectedCents)})</strong><small>Recorded payments · includes tips</small></div><div><span>In the chair</span><strong>${currentCheckins()}</strong><small>Checked-in visits</small></div></section><div class="section-head"><h2>In the chair ${state.calendarDate===today?'today':'on this day'}</h2><button class="text-btn" data-action="tomorrow">${state.calendarDate===today?'View tomorrow':'View today'} ${icon('arrow')}</button></div>${timeline()}<button class="barber-availability" data-view="pBlock">${icon('clock')}<span><strong>Make room for life</strong><small>Block time for a break or time off.</small></span>${icon('chevron')}</button>`;};
+const availabilityBeforeBarber=availability;
+availability=function(){const html=availabilityBeforeBarber();if(state.role!=='Barber Pro')return html;return html.replace('Make room for life.','Block time.').replace('Drag across days to select time off. Tap a start and end day on mobile.','Reserve a break, personal appointment or time off. Existing bookings stay protected.').replace('value="Vacation"','value="Personal time"').replace('Save time off','Save blocked time').replace('Full days off','All day');};
+const renderBeforeBarber=render;
+render=function(){renderBeforeBarber();document.body.dataset.barber=state.role==='Barber Pro'?'true':'false';if(state.role!=='Barber Pro')return;
+ const top=document.querySelector('.topbar');top?.querySelector('.mobile-brand')?.remove();top?.querySelector('.location')?.remove();top?.querySelector('.store-label')?.remove();top?.insertAdjacentHTML('afterbegin',`<button class="barber-brand" data-view="home" aria-label="Hairflix Today"><span class="barber-pole" aria-hidden="true"></span>HAIRFLIX</button>`);
+ const nav=document.querySelector('.bottom-nav');nav?.classList.add('barber-nav');nav?.querySelector('[data-view=manualBooking]')?.classList.add('barber-add-action');
+ const group=['pAppointment','pTicket','pFinalize','staffReceipt','pBlock','availability'].includes(state.view)?'pCalendar':state.view;
+ nav?.querySelectorAll('[data-view]').forEach(el=>{const active=el.dataset.view===group;el.classList.toggle('active',active);if(active)el.setAttribute('aria-current','page');else el.removeAttribute('aria-current');});
+ document.querySelector('.booking-toolbar')?.remove();
+ if(state.view==='pCalendar'){document.querySelector('.page-head')?.insertAdjacentHTML('afterend',`<div class="barber-calendar-actions"><button class="btn" data-view="manualBooking">${icon('plus')} Add booking</button><button class="btn secondary" data-view="pBlock">${icon('clock')} Block time</button></div>`);}
+ document.querySelectorAll('#vacation-form input[type=time]').forEach(input=>input.step='900');
+};
+document.addEventListener('click',e=>{if(state.role==='Barber Pro'&&e.target.closest('[data-view=manualBooking]'))state.bookingThread=null;},true);
+render();
