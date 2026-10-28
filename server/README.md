@@ -4,7 +4,7 @@ The application serves the marketing site and a new booking flow in one Vercel d
 
 ## Local development
 
-Use Node 24, run `npm install` and `npm run dev`, then open http://127.0.0.1:8092. Run `node tests/booking.test.mjs` for the ten backend checks. The SQLite adapter is for local verification; Vercel uses durable Redis storage. The dev server reads the process environment; export environment variables before starting it.
+Use Node 24, run `npm install` and `npm run dev`, then open http://127.0.0.1:8092. Run `node tests/booking.test.mjs` for the ten backend checks. The SQLite adapter is for local verification; Vercel uses durable Redis storage. The dev command loads `.env.local` and the process environment; keep sandbox secrets in the gitignored local file.
 
 ## Production activation
 
@@ -32,3 +32,7 @@ Redis uses atomic slot holds to prevent overlapping reservations within the conf
 The backend records optional marketing permission separately from required appointment contact permission. It does not send campaigns, reminders or confirmations. No email/SMS provider, staff dashboard, external calendar sync or automated refund flow is claimed. Staff must review confirmed bookings and `payment_review` records, handle cancellations/refunds in Stripe and implement the shop's retention process. Never expose the admin token in browser JavaScript or commit customer data.
 
 Until production activation the website offers the verified shop phone numbers and existing booking provider instead of accepting a deposit.
+
+## Stripe Connect sandbox
+
+Owner and independent-barber onboarding/payout panels use a separate sandbox-only backend. Follow [the full sandbox setup guide](../docs/stripe-connect-sandbox.md). The public role selector does not grant access to financial accounts. This does not activate the standalone booking/deposit flow or connect browser-local tickets to payment settlement.

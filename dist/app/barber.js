@@ -8,7 +8,7 @@ const renderBeforeBarber=render;
 render=function(){renderBeforeBarber();document.body.dataset.barber=state.role==='Barber Pro'?'true':'false';if(state.role!=='Barber Pro')return;
  const top=document.querySelector('.topbar');top?.querySelector('.mobile-brand')?.remove();top?.querySelector('.location')?.remove();top?.querySelector('.store-label')?.remove();top?.insertAdjacentHTML('afterbegin',`<button class="barber-brand" data-view="home" aria-label="Hairflix Today"><span class="barber-pole" aria-hidden="true"></span>HAIRFLIX</button>`);
  const nav=document.querySelector('.bottom-nav');nav?.classList.add('barber-nav');nav?.querySelector('[data-view=manualBooking]')?.classList.add('barber-add-action');
- const group=['pAppointment','pTicket','pFinalize','staffReceipt','pBlock','availability'].includes(state.view)?'pCalendar':state.view;
+ const group=state.view==='pConnect'?'more':['pAppointment','pTicket','pFinalize','staffReceipt','pBlock','availability'].includes(state.view)?'pCalendar':state.view;
  nav?.querySelectorAll('[data-view]').forEach(el=>{const active=el.dataset.view===group;el.classList.toggle('active',active);if(active)el.setAttribute('aria-current','page');else el.removeAttribute('aria-current');});
  document.querySelector('.booking-toolbar')?.remove();
  if(state.view==='pCalendar'){document.querySelector('.page-head')?.insertAdjacentHTML('afterend',`<div class="barber-calendar-actions"><button class="btn" data-view="manualBooking">${icon('plus')} Add booking</button><button class="btn secondary" data-view="pBlock">${icon('clock')} Block time</button></div>`);}
