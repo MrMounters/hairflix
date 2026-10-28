@@ -1,0 +1,2 @@
+// One short, CSS-only intro per tab. Never gates application initialization.
+(()=>{const el=document.getElementById('hairflix-splash');if(!el)return;const dismiss=()=>{el.remove();try{sessionStorage.setItem('hairflix-intro-seen','1');}catch{}};let seen=false;try{seen=sessionStorage.getItem('hairflix-intro-seen')==='1';}catch{}if(seen||matchMedia('(prefers-reduced-motion: reduce)').matches){dismiss();return;}el.hidden=false;el.addEventListener('animationend',e=>{if(e.target===el)dismiss();});setTimeout(dismiss,1300);})();
