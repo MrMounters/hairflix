@@ -19,7 +19,7 @@ function renderShops(){
 }
 function renderServices(){
  const list=catalog();if(!list.some(s=>s.id===state.service))state.service='';
- $('#service-prompt').textContent=`At Hairflix ${selectedShop().label}. Choose your service.`;
+ $('#service-prompt').textContent=`Choose a service at Hairflix ${selectedShop().label}.`;
  $('#booking-services').innerHTML=list.map(s=>{const price=state.location==='university'&&Number.isFinite(s.priceCents)?`$${(s.priceCents/100).toFixed(0)}`:'Price confirmed by shop';const minutes=s.durationMinutes||s.durationMins||s.duration||parseInt(s.time,10);return `<label class="booking-choice"><input type="radio" name="service" value="${esc(s.id)}" ${s.id===state.service?'checked':''}><span><strong>${esc(s.name)}</strong><small>${esc(price)}${Number.isFinite(minutes)?` · ${minutes} min`:''}</small></span></label>`}).join('');
  document.querySelectorAll('[name=service]').forEach(e=>e.addEventListener('change',()=>{state.service=e.value;state.start=''}));
 }
@@ -32,10 +32,10 @@ function directBooking(){const shop=selectedShop();$('#direct-booking').hidden=f
 async function loadSlots(){
  const request=++slotRequest;state.start='';state.slots=[];$('#time-slots').replaceChildren();$('#direct-booking').hidden=true;$('#booking-next').disabled=true;
  if(!dateInput.value||dateInput.value<dateInput.min||dateInput.value>dateInput.max){message('Choose a date within the next 30 days.','#availability-state');return}
- message('Finding times for your cut…','#availability-state');
+ message('Checking available times…','#availability-state');
  try{
   const params=new URLSearchParams({location:state.location,service:state.service,date:dateInput.value});const response=await fetch(`/api/availability?${params}`);const data=await response.json();if(request!==slotRequest)return;
-  if(!response.ok||data.ready===false){message('Book directly with the shop while the new calendar opens.','#availability-state');directBooking();return}
+  if(!response.ok||data.ready===false){message('This calendar is not accepting appointments. Use the booking link or call the shop below.','#availability-state');directBooking();return}
   state.slots=Array.isArray(data.slots)?data.slots:[];
   message(state.slots.length?'Choose a time that works for you.':'No times available on this date. Try another day.','#availability-state');
   for(const slot of state.slots){const b=document.createElement('button');b.type='button';b.className='time-slot';b.textContent=slot.label;b.setAttribute('aria-pressed','false');b.addEventListener('click',()=>{state.start=slot.start;document.querySelectorAll('.time-slot').forEach(e=>e.setAttribute('aria-pressed',String(e===b)));$('#booking-next').disabled=false});$('#time-slots').append(b)}
@@ -63,7 +63,7 @@ $('#booking-form').addEventListener('submit',async event=>{
  if(!email.validity.valid||!email.value.trim()){message('Enter a valid email address.');email.focus();return}
  const digits=phone.value.replace(/\D/g,'');if(digits.length<7||digits.length>15){message('Enter a valid phone number.');phone.focus();return}
  if(!consent.checked){message('Confirm the booking details and terms to continue.');consent.focus();return}
- $('#booking-next').disabled=true;$('#booking-next').textContent='Preparing your booking…';
+ $('#booking-next').disabled=true;$('#booking-next').textContent='Opening checkout…';
  try{
   const response=await fetch('/api/bookings',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:state.location,service:state.service,start:state.start,name:name.value.trim(),email:email.value.trim(),phone:phone.value.trim(),privacyConsent:true,marketingConsent:$('#booking-marketing').checked})});const data=await response.json();
   if(!response.ok)throw new Error(response.status===409?'That time was just taken. Go back and choose another.':'We couldn’t start your booking. Nothing has been charged. Please try again or call the shop.');
@@ -75,6 +75,6 @@ async function loadConfig(){try{const response=await fetch('/api/config');if(res
 async function showReturn(){
  const id=query.get('booking')||query.get('booking_id'),token=query.get('token');if(!id||!token)return;
  $('#booking-form').hidden=true;const result=$('#booking-result');result.hidden=false;result.textContent='Checking your appointment…';
- try{const response=await fetch(`/api/bookings/${encodeURIComponent(id)}?token=${encodeURIComponent(token)}`);const data=await response.json();if(!response.ok)throw new Error();result.replaceChildren();const h=document.createElement('h2'),p=document.createElement('p');h.textContent=data.status==='confirmed'?'You’re in. Looking sharp.':'Your booking is being checked.';p.textContent=data.status==='confirmed'?'Your deposit is confirmed and your appointment is saved.':'Your payment has not been confirmed yet. Please wait a moment before checking again or contact the shop.';result.append(h,p);if(data.status==='confirmed'){const detail=document.createElement('p');detail.textContent=`Booking reference: ${id}`;result.append(detail)}const a=document.createElement('a');a.href='/#locations';a.textContent='Contact your shop';result.append(a)}catch{result.textContent='We couldn’t check this booking. Contact your shop before making another payment.'}
+ try{const response=await fetch(`/api/bookings/${encodeURIComponent(id)}?token=${encodeURIComponent(token)}`);const data=await response.json();if(!response.ok)throw new Error();result.replaceChildren();const h=document.createElement('h2'),p=document.createElement('p');h.textContent=data.status==='confirmed'?'Your appointment is confirmed.':'Waiting for payment confirmation.';p.textContent=data.status==='confirmed'?'Your $5 deposit is confirmed and your appointment is booked.':'Your payment has not been confirmed yet. Check again in a moment or contact the shop.';result.append(h,p);if(data.status==='confirmed'){const detail=document.createElement('p');detail.textContent=`Booking reference: ${id}`;result.append(detail)}const a=document.createElement('a');a.href='/#locations';a.textContent='Contact your shop';result.append(a)}catch{result.textContent='We couldn’t check this booking. Contact your shop before making another payment.'}
 }
 renderShops();renderServices();loadConfig();showReturn();
