@@ -1,0 +1,28 @@
+{
+  "expo": {
+    "name": "Goodchair",
+    "slug": "goodchair",
+    "version": "0.1.0",
+    "orientation": "default",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.goodchair.preview"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#E6F4FE",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false,
+      "package": "com.goodchair.preview"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "scheme": "goodchair"
+  }
+}
