@@ -110,7 +110,7 @@ document.addEventListener('click',e=>{const el=e.target.closest('button');if(!el
  case'remove-line':{const b=saveEditor();HFTickets.edit(b.ticket,b.ticket.lines.filter(l=>l.id!==d.line));save();render();break;}
  case'review-ticket':saveEditor();go('pFinalize');break;
  case'finalize-ticket':withTicket(t=>HFTickets.finalize(t));render();toast('Ticket finalized. Send it when you’re ready.');break;
- case'send-ticket':withTicket((t,b)=>{HFTickets.send(t);b.status='awaiting_approval';});go('pTicket');toast('request ready in Customer → Checkout.');break;
+ case'send-ticket':withTicket((t,b)=>{HFTickets.send(t);b.status='awaiting_approval';postFinalPaymentRequest(b);});go('pTicket');toast('Checkout request sent in Messages.');break;
  case'reopen-ticket':withTicket((t,b)=>{HFTickets.reopen(t);b.status='in_service';});state.postTip=null;go('pTicket');toast('Previous approval request withdrawn.');break;
  case'preview-client':{const b=visitFor();if(b.client!=='John B.')throw new Error('Customer preview is John B. Use the sample live visit to test both roles.');openApproval(b.id);break;}
  case'select-approval':openApproval(d.id);break;
