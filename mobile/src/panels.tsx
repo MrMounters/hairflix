@@ -2,7 +2,7 @@ import React,{useState} from 'react';
 import {View,Text,Pressable,ScrollView} from 'react-native';
 import {useStore} from './store';
 import {barbers,services,today,addDays,pretty,clock,money,uid,duration,subtotal,total,slotError,type Role,type Visit} from './domain';
-import {s,c,Card,Title,Button,Chip,Field,Line,Avatar,ClientAvatar,Icon,Badge} from './ui';
+import {fonts,s,c,Card,Title,Button,Chip,Field,Line,Avatar,ClientAvatar,Icon,Badge} from './ui';
 function Dates({value,onChange}:{value:string;onChange:(date:string)=>void}){return <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{marginBottom:16}} contentContainerStyle={{gap:8}}>{Array.from({length:10},(_,i)=>addDays(today(),i)).map(date=><Chip key={date} label={date===today()?'Today':pretty(date)} selected={date===value} onPress={()=>onChange(date)}/>)}</ScrollView>;}
 export function BookingPanel({role,staffId,initialDate,walkIn=false,onClose}:{role:Role;staffId:string;initialDate:string;walkIn?:boolean;onClose:(date?:string)=>void}){
  const {data,act}=useStore(),[barber,setBarber]=useState(role==='barber'?staffId:'lara'),[ids,setIds]=useState(['cut']),[date,setDate]=useState(walkIn?today():initialDate),[time,setTime]=useState<number|null>(null),[client,setClient]=useState(role==='customer'?'John B.':''),[step,setStep]=useState(0),[error,setError]=useState('');
