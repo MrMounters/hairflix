@@ -20,3 +20,7 @@
 @media(max-width:700px){.maker-signoff{justify-content:flex-start}.maker-credit{align-items:flex-start}}
 
 .header-actions{display:flex;align-items:center;gap:24px}.header-login{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding-inline:12px;border:1px solid #646056;font-weight:600;font-size:14px}.header-login:hover{background:#302e29}@media(max-width:700px){.header-actions{gap:10px}.header-login{padding-inline:10px}.header-actions .header-book{font-size:13px;gap:6px}.header-actions .header-book .icon{display:none}.header{gap:12px}}
+
+/* Keep the dock against the visible screen edge as mobile browser controls resize it. */
+.book-dock{top:auto;bottom:calc(max(16px,env(safe-area-inset-bottom,0px)) + var(--dock-viewport-inset,0px));margin:0}
+@media(max-width:700px){.book-dock{bottom:calc(max(12px,env(safe-area-inset-bottom,0px)) + var(--dock-viewport-inset,0px))}}
