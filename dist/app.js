@@ -10,7 +10,7 @@ const setShop=id=>{
  shopButtons.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.shop===id)));
  shopPanels.forEach(panel=>{panel.hidden=panel.dataset.shopPanel!==id;panel.classList.toggle('is-active',!panel.hidden)});
  const call=document.querySelector('.dock-call');call.href=`tel:${shop.tel}`;call.setAttribute('aria-label',`Call Hairflix ${shop.label}`);
- document.querySelector('.dock-book').href=`book.html?location=${id}`;
+ document.querySelector('.dock-book').href='https://getsquire.com/booking/brands/hairflix-barbershop';
 };
 if(tabs){tabs.hidden=false;setShop('university');shopButtons.forEach(b=>b.addEventListener('click',()=>setShop(b.dataset.shop)))}
 const motion=matchMedia('(prefers-reduced-motion: reduce)');
