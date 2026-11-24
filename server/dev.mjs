@@ -1,3 +1,4 @@
+import {createPlatformApp} from './platform/app.mjs';
 import {createServer} from 'node:http';
 import {readFile} from 'node:fs/promises';
 import {resolve,extname} from 'node:path';
@@ -9,6 +10,7 @@ const port=Number(process.env.PORT??8092),root=resolve('dist');
 // Local holds can use SQLite. Payment remains unavailable without Stripe config.
 const env={...process.env};
 const store=new SqliteStore(process.env.LOCAL_BOOKING_DB??':memory:');
+const platform=createPlatformApp(env);
 const app=createBookingApp(env,{store}),connect=createConnectApp(env),access=createAccessApp(env);
 const types={'.html':'text/html; charset=utf-8','.css':'text/css','.js':'text/javascript','.webp':'image/webp','.jpg':'image/jpeg','.svg':'image/svg+xml','.woff':'font/woff','.woff2':'font/woff2','.json':'application/json'};
 createServer(async(req,res)=>{
@@ -17,7 +19,7 @@ createServer(async(req,res)=>{
  if(url.pathname.startsWith('/api/')){
   const chunks=[];for await(const chunk of req)chunks.push(chunk);
   const request={method:req.method,path:url.pathname,query:Object.fromEntries(url.searchParams),headers:req.headers,body:Buffer.concat(chunks),ip:req.socket.remoteAddress};
-  const response=await access(request)||await connect(request)||await app(request);
+  const response=await platform(request)||await access(request)||await connect(request)||await app(request);
   res.writeHead(response.status,response.headers);res.end(response.body);return;
  }
  const path=resolve(root,'.'+(url.pathname.endsWith('/')?url.pathname+'index.html':url.pathname));

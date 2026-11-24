@@ -1,72 +1,33 @@
-# Goodchair native app
+# Hairflix mobile app
 
-React Native + Expo app for iPhone, Android and iPad, with Hairflix as the example shop. This uses native views and controls, not a WebView of the website. The original website remains in `../dist`.
+Native React Native + Expo app for customers, barbers and owners. The app now uses authenticated shared server storage instead of selectable local demo roles.
 
-## Run
-
-Use Node 24 (the version used for validation here) and npm:
+See [implementation, setup and release status](../docs/hairflix-platform.md) for the feature matrix, backend configuration, notification worker and remaining release requirements.
 
 ```sh
-cd mobile
 npm ci
+cp .env.example .env.local
+# Set EXPO_PUBLIC_APP_API_URL to your reachable Hairflix backend URL.
 npm start
 ```
 
-Open with a compatible Expo Go build for **SDK 58**, or create a development/preview build. Check your installed Expo Go version: Expo's SDK transition guidance may recommend a different SDK for the App Store's current Expo Go. For a stable pilot use an EAS build matching this project, rather than changing package versions individually.
+Use Node 24 and Expo SDK 58. A physical phone needs a reachable HTTPS backend, not the computer’s localhost address. Native bearer credentials use SecureStore. The web target uses sessionStorage and must have its origin authorized by the server.
 
 ```sh
-npm run web
-npm run ios      # macOS and Xcode are needed for a local simulator
-npm run android  # Android Studio/emulator or a connected Android device
 npm run typecheck
 npm test
 npx expo export --platform all
 ```
 
-## Included workflows
+The owner activates the first account with a private server-configured activation token. Barber/other owner accounts require invitations. Customers can register independently. Internal pilot bookings do not synchronize to Squire, and online card payments are unavailable.
 
-- Customer, barber and owner preview workspaces, selected from Account.
-- Customer multi-service booking with combined price and duration, available quarter-hour slots, appointment details, rescheduling and cancellation.
-- Barber daily schedule, check-in, sending a final-ticket request and blocked time.
-- Owner multi-chair calendar, replacement-barber eligibility checks, explicit reassignment confirmation and optional in-app notification. The booked service prices are retained.
-- Report an absence for a day. New bookings are blocked; unstarted bookings are marked as needing reassignment. Existing clients are not automatically cancelled or moved. In-service visits are retained.
-- Messages with unread counts, grouped dates, read receipts and linked appointments.
-- Customer service approval, optional tip and explicitly simulated payment. Open Customer > Home to try the seeded John B. checkout. Return to Barber/Owner to see the recorded state.
-- Commission calculation setting, shareable existing web barber profile, fictional loyalty card and native tablet layout.
-- AsyncStorage saves the preview on the current device. Account includes an explicit reset.
+## TestFlight
 
-The available booking window is 9 AM–6 PM, Arizona time. Other shops, variable hours and full service/employee administration are not ported yet. Booking prices are snapshots, so later catalog edits should not rewrite old visits.
+The Hairflix app icons are included. `com.hairflix.preview` is a provisional bundle identifier; replace it with the identifier registered in the owner’s Apple organization before the first signed build. No EAS project or Apple signing credentials were created by this change.
 
-## Preview boundaries
+1. Sign in to Expo CLI/EAS with your account and link the correct organization’s EAS project using `eas init`.
+2. Configure the final bundle identifier, EAS project ID, production `EXPO_PUBLIC_APP_API_URL`, Apple push credentials and the hosted backend described in the setup guide.
+3. Use `eas build --platform ios --profile production` for a TestFlight build, then `eas submit --platform ios --profile production` through the authorized App Store Connect organization.
+4. Finish privacy/support metadata, review access and hardware tests before inviting shop staff.
 
-Workspace selection is not authentication. All people, booking changes, messages, notifications and payment records here are local to this native preview. They do not update the website or another device, send SMS, collect a card, move money, or issue payouts. `paymentSource: simulation` is stored with every simulated payment.
-
-The UI prevents editing another barber's visit, but this is not a security boundary. A production backend must independently authenticate the user and enforce every permission and transition. Do not use AsyncStorage for production authorization tokens or payment credentials.
-
-The domain transitions in `src/domain.ts` are transport-independent. They can be reused for client guidance, but server-side transactions must enforce concurrency and be authoritative for availability and payment status.
-
-## TestFlight and App Store
-
-The included `app.json` enables tablets and supplies the provisional identifier `com.goodchair.preview`. Set a unique identifier owned by your Apple/Google developer organization before shipping. No Apple account, Expo project, provisioning profile or App Store submission was created here.
-
-1. Create/link the Expo project with your own account using EAS CLI.
-2. Set the final app name, bundle identifier, organization and branding. Run `npx expo-doctor` and resolve SDK/device compatibility.
-3. For a development client, install the SDK-matched `expo-dev-client` with `npx expo install expo-dev-client` before using the development profile. The preview profile can be used without a development client.
-4. Build for iOS with `eas build --platform ios --profile preview` for registered internal devices, or `--profile production` for TestFlight/App Store.
-5. Submit the production build through your account with `eas submit --platform ios`. Complete App Store Connect screenshots, privacy disclosures, support/privacy URLs, review access and testing.
-
-iOS and Android JavaScript exports are not signed app binaries. A successful Metro bundle does not replace running the app on actual iPhone/iPad/Android hardware.
-
-## Next production milestone
-
-Connect a shared backend for identity, memberships, locations, visits, blocks, messages, service snapshots and payment attempts. Add server-authorized realtime updates, transactional interval exclusion and idempotency. Then add Stripe Terminal/Connect or Clover behind a provider adapter. Only verified provider events may mark a real payment as paid. Treat customer approval, successful payment and payout as separate states.
-
-`tests/domain.test.ts` checks scheduling boundaries, absence/reassignment, payment transitions, read receipts and cancellation. Browser checks of Expo's web target exercise the same screen code, but native device testing is still required.
-
-Reference: [Expo project setup](https://docs.expo.dev/get-started/create-a-project/), [Expo Go version compatibility](https://docs.expo.dev/troubleshooting/expo-go-version-mismatch/), and [EAS Build](https://docs.expo.dev/build/introduction/).
-
-## App and browser icons
-
-Goodchair now has its own cream `g.` mark on burgundy. `assets/icon.png` is an opaque 1024×1024 iOS/general icon; Android has separate 1024×1024 foreground, background and monochrome layers. The transparent foreground stays within the center safe area. Expo's web target uses `assets/favicon.png`. The Hairflix marketing site retains its separate H favicon.
-
-Run a new EAS preview/production build and reinstall it to change the installed home-screen icon. Restarting Metro does not update native icon resources, and Expo Go keeps its own launcher icon. The splash asset is supplied for future splash-screen configuration; no new splash plugin was added.
+For the development-client profile, install `expo-dev-client` with `npx expo install expo-dev-client` first. The preview profile is for registered internal devices. A successful JavaScript export is not a signed `.ipa` and does not prove hardware/push behavior.

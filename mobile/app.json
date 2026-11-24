@@ -1,15 +1,18 @@
 {
   "expo": {
-    "name": "Goodchair",
-    "slug": "goodchair",
-    "version": "0.1.0",
+    "name": "Hairflix",
+    "slug": "hairflix",
+    "version": "0.2.0",
     "orientation": "default",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.goodchair.preview",
-      "icon": "./assets/icon.png"
+      "bundleIdentifier": "com.hairflix.preview",
+      "icon": "./assets/icon.png",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -19,11 +22,23 @@
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.goodchair.preview"
+      "package": "com.hairflix.preview"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "scheme": "goodchair"
+    "scheme": "hairflix",
+    "plugins": [
+      "expo-secure-store",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow Hairflix to upload the haircut photos you choose.",
+          "cameraPermission": false,
+          "microphonePermission": false
+        }
+      ],
+      "expo-notifications"
+    ]
   }
 }

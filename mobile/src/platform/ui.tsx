@@ -1,0 +1,328 @@
+import React from "react";
+import {
+  View,
+  Text,
+  Pressable,
+  StyleSheet,
+  Image,
+  TextInput,
+  type TextInputProps,
+  type ViewStyle,
+} from "react-native";
+import Ionicons from "@expo/vector-icons/Ionicons";
+export const fonts = { regular: "DMSans", semibold: "DMSansSemiBold" };
+export const c = {
+  bg: "#101113",
+  panel: "#1d1e22",
+  raised: "#28292e",
+  line: "#3b3c43",
+  text: "#f4f0e9",
+  muted: "#a3a3ae",
+  red: "#cf293e",
+  green: "#acd9bb",
+};
+export function Icon({
+  name,
+  size = 21,
+  color = c.text,
+}: {
+  name: React.ComponentProps<typeof Ionicons>["name"];
+  size?: number;
+  color?: string;
+}) {
+  return (
+    <Ionicons
+      accessible={false}
+      accessibilityElementsHidden
+      importantForAccessibility="no-hide-descendants"
+      name={name}
+      size={size}
+      color={color}
+    />
+  );
+}
+export function Card({
+  children,
+  style,
+}: {
+  children: React.ReactNode;
+  style?: ViewStyle;
+}) {
+  return <View style={[s.card, style]}>{children}</View>;
+}
+export function Title({ title, sub }: { title: string; sub?: string }) {
+  return (
+    <View style={s.title}>
+      <Text accessibilityRole="header" style={s.h1}>
+        {title}
+      </Text>
+      {sub && <Text style={s.muted}>{sub}</Text>}
+    </View>
+  );
+}
+export function Button({
+  label,
+  onPress,
+  secondary = false,
+  disabled = false,
+  icon,
+}: {
+  label: string;
+  onPress: () => void;
+  secondary?: boolean;
+  disabled?: boolean;
+  icon?: React.ComponentProps<typeof Ionicons>["name"];
+}) {
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={label}
+      accessibilityState={{ disabled }}
+      disabled={disabled}
+      onPress={onPress}
+      style={({ pressed }) => [
+        s.button,
+        secondary && s.secondary,
+        { opacity: disabled ? 0.4 : pressed ? 0.75 : 1 },
+      ]}
+    >
+      {icon && <Icon name={icon} size={19} />}
+      <Text style={s.buttonText}>{label}</Text>
+    </Pressable>
+  );
+}
+export function Chip({
+  label,
+  selected = false,
+  onPress,
+  disabled = false,
+}: {
+  label: string;
+  selected?: boolean;
+  onPress: () => void;
+  disabled?: boolean;
+}) {
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={label}
+      accessibilityState={{ selected, disabled }}
+      disabled={disabled}
+      onPress={onPress}
+      style={[s.chip, selected && s.selected, disabled && { opacity: 0.35 }]}
+    >
+      <Text style={s.chipText}>{label}</Text>
+    </Pressable>
+  );
+}
+export function Field({ label, ...props }: TextInputProps & { label: string }) {
+  return (
+    <View style={s.field}>
+      <Text style={s.label}>{label}</Text>
+      <TextInput
+        accessibilityLabel={label}
+        placeholderTextColor={c.muted}
+        {...props}
+        style={[s.input, props.style]}
+      />
+    </View>
+  );
+}
+export function Badge({
+  text,
+  green = false,
+}: {
+  text: string;
+  green?: boolean;
+}) {
+  return (
+    <View style={[s.badge, green && { backgroundColor: "#21382a" }]}>
+      <Text style={[s.badgeText, green && { color: c.green }]}>{text}</Text>
+    </View>
+  );
+}
+export function ClientAvatar({
+  name,
+  size = 40,
+}: {
+  name: string;
+  size?: number;
+}) {
+  return (
+    <View
+      accessibilityLabel={name}
+      style={{
+        width: size,
+        height: size,
+        borderRadius: size / 2,
+        backgroundColor: c.raised,
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <Text style={{ fontFamily: fonts.regular, color: c.muted, fontSize: 12 }}>
+        {name
+          .split(" ")
+          .map((n) => n[0])
+          .join("")
+          .slice(0, 2)}
+      </Text>
+    </View>
+  );
+}
+export function Line({
+  label,
+  value,
+  strong = false,
+}: {
+  label: string;
+  value: string;
+  strong?: boolean;
+}) {
+  return (
+    <View style={s.line}>
+      <Text style={[s.muted, { flex: 1 }]}>{label}</Text>
+      <Text
+        style={[
+          s.text,
+          strong && {
+            fontSize: 23,
+            fontFamily: fonts.semibold,
+            fontWeight: "normal",
+          },
+        ]}
+      >
+        {value}
+      </Text>
+    </View>
+  );
+}
+export const s = StyleSheet.create({
+  card: {
+    backgroundColor: c.panel,
+    borderRadius: 23,
+    borderWidth: 1,
+    borderColor: c.line,
+    padding: 20,
+    marginBottom: 16,
+  },
+  title: { gap: 8, marginBottom: 22 },
+  h1: {
+    fontSize: 30,
+    lineHeight: 35,
+    fontFamily: fonts.semibold,
+    fontWeight: "normal",
+    color: c.text,
+    letterSpacing: -1,
+  },
+  h2: {
+    fontSize: 21,
+    fontFamily: fonts.semibold,
+    fontWeight: "normal",
+    color: c.text,
+    marginBottom: 12,
+  },
+  text: {
+    fontFamily: fonts.regular,
+    color: c.text,
+    fontSize: 15,
+    lineHeight: 22,
+  },
+  muted: {
+    fontFamily: fonts.regular,
+    color: c.muted,
+    fontSize: 13,
+    lineHeight: 20,
+  },
+  row: { flexDirection: "row", alignItems: "center", gap: 12 },
+  between: { justifyContent: "space-between" },
+  button: {
+    minHeight: 49,
+    borderRadius: 14,
+    backgroundColor: c.red,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 13,
+    flexDirection: "row",
+    gap: 9,
+    marginTop: 10,
+  },
+  secondary: { backgroundColor: c.raised, borderWidth: 1, borderColor: c.line },
+  buttonText: {
+    fontSize: 14,
+    fontFamily: fonts.semibold,
+    fontWeight: "normal",
+    color: c.text,
+    textAlign: "center",
+  },
+  chip: {
+    minHeight: 43,
+    paddingHorizontal: 14,
+    paddingVertical: 11,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: c.line,
+    backgroundColor: c.panel,
+  },
+  chipText: { fontFamily: fonts.regular, fontSize: 13, color: c.text },
+  selected: { backgroundColor: "#49222c", borderColor: "#ed5a70" },
+  chips: { flexDirection: "row", flexWrap: "wrap", gap: 8, marginBottom: 15 },
+  field: { gap: 8, marginBottom: 15 },
+  label: { fontFamily: fonts.regular, color: c.muted, fontSize: 12 },
+  input: {
+    fontFamily: fonts.regular,
+    backgroundColor: c.bg,
+    borderWidth: 1,
+    borderColor: c.line,
+    borderRadius: 12,
+    padding: 14,
+    fontSize: 16,
+    color: c.text,
+    minHeight: 49,
+  },
+  badge: {
+    paddingHorizontal: 9,
+    paddingVertical: 5,
+    borderRadius: 8,
+    backgroundColor: "#422831",
+    alignSelf: "flex-start",
+  },
+  badgeText: {
+    fontSize: 10,
+    color: "#f1a1b0",
+    fontFamily: fonts.semibold,
+    fontWeight: "normal",
+  },
+  line: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    justifyContent: "space-between",
+    paddingVertical: 14,
+    borderBottomWidth: 1,
+    borderBottomColor: c.line,
+  },
+  divider: { height: 1, backgroundColor: c.line, marginVertical: 16 },
+  error: {
+    fontFamily: fonts.regular,
+    color: "#ff9fae",
+    fontSize: 13,
+    lineHeight: 20,
+    marginVertical: 12,
+  },
+  caption: {
+    fontFamily: fonts.regular,
+    fontSize: 10,
+    letterSpacing: 2,
+    color: c.muted,
+    marginBottom: 12,
+  },
+  section: { marginBottom: 18 },
+  link: {
+    color: "#f0788a",
+    fontSize: 14,
+    fontFamily: fonts.semibold,
+    fontWeight: "normal",
+    paddingVertical: 10,
+  },
+});
