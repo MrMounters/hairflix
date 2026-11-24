@@ -64,3 +64,9 @@ Connect a shared backend for identity, memberships, locations, visits, blocks, m
 `tests/domain.test.ts` checks scheduling boundaries, absence/reassignment, payment transitions, read receipts and cancellation. Browser checks of Expo's web target exercise the same screen code, but native device testing is still required.
 
 Reference: [Expo project setup](https://docs.expo.dev/get-started/create-a-project/), [Expo Go version compatibility](https://docs.expo.dev/troubleshooting/expo-go-version-mismatch/), and [EAS Build](https://docs.expo.dev/build/introduction/).
+
+## App and browser icons
+
+Goodchair now has its own cream `g.` mark on burgundy. `assets/icon.png` is an opaque 1024×1024 iOS/general icon; Android has separate 1024×1024 foreground, background and monochrome layers. The transparent foreground stays within the center safe area. Expo's web target uses `assets/favicon.png`. The Hairflix marketing site retains its separate H favicon.
+
+Run a new EAS preview/production build and reinstall it to change the installed home-screen icon. Restarting Metro does not update native icon resources, and Expo Go keeps its own launcher icon. The splash asset is supplied for future splash-screen configuration; no new splash plugin was added.
