@@ -1,6 +1,6 @@
 # Hairflix
 
-A custom mobile-first website and booking system for Hairflix Barbershop. Three verified Tempe and Scottsdale locations, actual business/Google photographs, sourced reviews, shop-specific maps, a service menu, floating booking CTA and a new four-stage booking flow with a $5 deposit.
+A custom mobile-first website and booking system for Hairflix Barbershop. Two verified locations in Tempe and Scottsdale, actual business/Google photographs, sourced reviews, shop-specific maps, a service menu, floating booking CTA and a new four-stage booking flow with a $5 deposit.
 
 ## Development
 

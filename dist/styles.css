@@ -24,3 +24,6 @@
 /* Keep the dock against the visible screen edge as mobile browser controls resize it. */
 .book-dock{top:auto;bottom:calc(max(16px,env(safe-area-inset-bottom,0px)) + var(--dock-viewport-inset,0px));margin:0}
 @media(max-width:700px){.book-dock{bottom:calc(max(12px,env(safe-area-inset-bottom,0px)) + var(--dock-viewport-inset,0px))}}
+
+/* Signature logo: original H/pole monogram plus outlined Hairflix wordmark. */
+.brand .brand-lockup{display:block;width:176px;height:auto;max-width:none}.brand{line-height:1}.quote-grid{grid-template-columns:repeat(2,minmax(0,1fr))}@media(max-width:700px){.brand .brand-lockup{width:154px}.quote-grid{grid-template-columns:1fr}.shop-tabs button{min-width:0}}@media(max-width:359px){.brand .brand-lockup{width:136px}}

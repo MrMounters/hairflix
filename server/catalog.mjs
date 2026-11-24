@@ -4,7 +4,6 @@ export const HOLD_SECONDS = 35 * 60;
 export const CHECKOUT_SECONDS = 30 * 60;
 export const LOCATIONS = [
  {id:'university',name:'Hairflix · University',city:'Tempe',phone:'+14805594539',address:'1301 E University Dr, Unit 136, Tempe, AZ 85288',hours:[[450,1260],[480,1320],[480,1320],[450,1320],[450,1320],[450,1320],[450,1260]]},
- {id:'apache',name:'Hairflix by Vodi · Apache',city:'Tempe',phone:'+16028605995',address:'922 E Apache Blvd, Suite 108, Tempe, AZ 85281',hours:Array.from({length:7},()=>[600,1320])},
  {id:'scottsdale',name:'Hairflix · Scottsdale',city:'Scottsdale',phone:'+16027851988',address:'7349 N Vía Paseo Del Sur, Suite 520, Scottsdale, AZ 85258',hours:Array.from({length:7},()=>[540,1080])}
 ];
 // University prices/durations are from Hairflix's published SQUIRE menu.

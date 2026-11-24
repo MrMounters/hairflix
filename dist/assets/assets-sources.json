@@ -2,15 +2,6 @@
   "checked": "2026-10-20",
   "images": [
     {
-      "name": "logo",
-      "file": "logo.webp",
-      "source_url": "https://irp.cdn-website.com/3c87ee17/dms3rep/multi/opt/348857917_1945350725803017_1694926252491721428_n_optimized-1577w.jpg",
-      "source_page": "https://www.hairflixbarbershop.com/",
-      "source_type": "official_business_website",
-      "bytes": 27611,
-      "dimensions": "600x600"
-    },
-    {
       "location": "university",
       "file": "university.webp",
       "source_url": "https://lh3.googleusercontent.com/grass-cs/AABkmLfTdtaEF487_hHlww9ZALN7c8aF-iT-qv7Q8Oac4ho2x9TNfYAKlykDeF5MJAMfhqSXC4unvoJt4vqWbUoZiA8ZBi9dxbMpwC-ei8RojFzZ7LoyzQTp8Dhn3oZKpblUii8W5Id6nOQc9_k=w1200-h1000-k-no",
@@ -110,15 +101,6 @@
       "dimensions": "750x1000"
     },
     {
-      "file": "gmb-apache-1.webp",
-      "source_url": "https://lh3.googleusercontent.com/grass-cs/AABkmLdha_LOGAOfbrYV9cTN2WjdtW7SkVNCwPcePyExIMvpEInYj-6s90_4EWot8eNZlmWszRt-PiJThpu1a59ekoMOylCFGuzHStu0E2-F5UcEX0SoJ-PPQxnjVZGNaTy_kq_X2MtyfW8vNlfU=w1200-h1000-k-no",
-      "source_page": "https://maps.app.goo.gl/gHPzs5XtrV3V4uKU7",
-      "location": "apache",
-      "google_photo_id": "CIABIhA0j0ckUvUj-zyx16r7i7W2",
-      "source_type": "google_business_profile",
-      "dimensions": "1200x800"
-    },
-    {
       "file": "gmb-scottsdale-1.webp",
       "source_url": "https://lh3.googleusercontent.com/grass-cs/AABkmLfS_oFzS9YOdWGGtCIKP9IYyVSAocO4KcNZmVJisrawOtBGHFSC8l3OMFxtWxsZr-OvZqTB7WZD7vKBCR29_wZJ9V-yT8hPF9Ono3fZ-gxF5Gwq56WGXpqqJkY7CQ91kJb1BAqGt78egvw=w1200-h1000-k-no",
       "source_page": "https://maps.app.goo.gl/8YHHavNPa6QAou7g6",
@@ -192,46 +174,6 @@
       "source_page": "https://maps.app.goo.gl/p7jUxpA27JVrSJE8A"
     },
     {
-      "location": "apache",
-      "file": "gmb-apache-photo-1.webp",
-      "source_url": "https://lh3.googleusercontent.com/grass-cs/AABkmLdha_LOGAOfbrYV9cTN2WjdtW7SkVNCwPcePyExIMvpEInYj-6s90_4EWot8eNZlmWszRt-PiJThpu1a59ekoMOylCFGuzHStu0E2-F5UcEX0SoJ-PPQxnjVZGNaTy_kq_X2MtyfW8vNlfU=w1200-h1000-k-no",
-      "source_type": "google_business_profile",
-      "dimensions": "1200x800",
-      "source_page": "https://maps.app.goo.gl/gHPzs5XtrV3V4uKU7"
-    },
-    {
-      "location": "apache",
-      "file": "gmb-apache-photo-2.webp",
-      "source_url": "https://lh3.googleusercontent.com/grass-cs/AABkmLfqjSr52kqh_7lQJoqhPyxATT6PzmjIQypsYGmaPY19FM-w56kMQxuOBCwVC-oBQ1Yh4lZBmSwNgzYaJSoWvR2OvwyB0zJA2OBC_Lf3zQqdwMzlh3OMN44BIELFizDJSR7BUILDKT5UCh8=w1200-h1000-k-no",
-      "source_type": "google_business_profile",
-      "dimensions": "1200x800",
-      "source_page": "https://maps.app.goo.gl/gHPzs5XtrV3V4uKU7"
-    },
-    {
-      "location": "apache",
-      "file": "gmb-apache-photo-3.webp",
-      "source_url": "https://lh3.googleusercontent.com/grass-cs/AABkmLcTag3cITb7eEKq-qCvRhxLWfNvfM319jShUA5IzXVAsH6BO_sv9Cvk5PDIbweYrpgPNXMWR_3dS1U_8eKsl9CFhXe6Ljg5fVwz-1YTrm1QPay2ZlfUXVA2u-t6LRPIl1ZWvdlTeamsANr6=w1200-h1000-k-no",
-      "source_type": "google_business_profile",
-      "dimensions": "562x1000",
-      "source_page": "https://maps.app.goo.gl/gHPzs5XtrV3V4uKU7"
-    },
-    {
-      "location": "apache",
-      "file": "gmb-apache-photo-4.webp",
-      "source_url": "https://lh3.googleusercontent.com/grass-cs/AABkmLdnnF9n-nJJxzVj9FGjkH1ZmrxajOkFOMatulyPpDOQYu8yHymz3eS39CupO_j--X2mXBWG-ZB3Gswv9p-XUEV8jFtfxuconAWAsYuNGlxTSgWLuPVhCtY3oZiagEKKsmaxxV4n4eGCMjzT=w1200-h1000-k-no",
-      "source_type": "google_business_profile",
-      "dimensions": "1200x800",
-      "source_page": "https://maps.app.goo.gl/gHPzs5XtrV3V4uKU7"
-    },
-    {
-      "location": "apache",
-      "file": "gmb-apache-photo-5.webp",
-      "source_url": "https://lh3.googleusercontent.com/grass-cs/AABkmLdTeo5-KFfvV2h_RWG2vlQ87sM7o3Asih4xui0BVb9NKQzMjThyRIhDPM_D8KvBo71g4GL_1LeGqi7Ntu7kW8yQm340_sV_XdCgo4mKOb_3PqEWahJhgVCfEZbIIKbAcFr7YdnuCfole7ZJ=w1200-h1000-k-no",
-      "source_type": "google_business_profile",
-      "dimensions": "750x1000",
-      "source_page": "https://maps.app.goo.gl/gHPzs5XtrV3V4uKU7"
-    },
-    {
       "location": "scottsdale",
       "file": "gmb-scottsdale-photo-1.webp",
       "source_url": "https://lh3.googleusercontent.com/grass-cs/AABkmLfS_oFzS9YOdWGGtCIKP9IYyVSAocO4KcNZmVJisrawOtBGHFSC8l3OMFxtWxsZr-OvZqTB7WZD7vKBCR29_wZJ9V-yT8hPF9Ono3fZ-gxF5Gwq56WGXpqqJkY7CQ91kJb1BAqGt78egvw=w1200-h1000-k-no",
@@ -272,13 +214,12 @@
       "source_page": "https://maps.app.goo.gl/8YHHavNPa6QAou7g6"
     },
     {
-      "location": "apache",
-      "file": "apache.webp",
-      "source_url": "https://lh3.googleusercontent.com/grass-cs/AABkmLdha_LOGAOfbrYV9cTN2WjdtW7SkVNCwPcePyExIMvpEInYj-6s90_4EWot8eNZlmWszRt-PiJThpu1a59ekoMOylCFGuzHStu0E2-F5UcEX0SoJ-PPQxnjVZGNaTy_kq_X2MtyfW8vNlfU=w1200-h1000-k-no",
-      "source_type": "google_business_profile",
-      "dimensions": "1200x800",
-      "source_page": "https://maps.app.goo.gl/gHPzs5XtrV3V4uKU7",
-      "exported_from": "gmb-apache-photo-1.webp"
+      "name": "logo",
+      "file": "logo.webp",
+      "source_type": "custom_brand_identity",
+      "source_file": "hairflix-logo.svg",
+      "dimensions": "1488x396",
+      "notes": "Outlined Hairflix wordmark with the approved signature H and barber-pole mark; not an original business photograph."
     }
   ],
   "reviews": [
@@ -291,16 +232,6 @@
       "profile_url": "https://maps.app.goo.gl/p7jUxpA27JVrSJE8A",
       "excerpt": "He takes his time and cuts with precision and care!",
       "excerpt_words": 10
-    },
-    {
-      "location": "apache",
-      "reviewer": "Aarnavk18",
-      "rating": 5,
-      "relative_date": "5 months ago",
-      "source_url": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvT2xCak56azRlVzlwUXpFeVMwOVpWSHBXUlRaclFVRRAB!2m1!1s0x0:0x9bf099afc0e723b3!3m1!1s2@1:CAIQACodChtycF9oOlBjNzk4eW9pQzEyS09ZVHpWRTZrQUE%7C%7C?hl=en-US",
-      "profile_url": "https://maps.app.goo.gl/gHPzs5XtrV3V4uKU7",
-      "excerpt": "Dom did an amazing job. Super professional, easy to talk to, and clearly knows what he’s doing.",
-      "excerpt_words": 17
     },
     {
       "location": "scottsdale",

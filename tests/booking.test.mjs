@@ -11,7 +11,7 @@ const form=(extra={})=>({location:'university',service:'regular-haircut',start:S
 function setup(){
  let now=Date.parse('2026-10-20T18:00:00Z');
  const store=new SqliteStore(':memory:',()=>now);
- const env={BOOKING_ENABLED:'true',BOOKING_ACTIVE_LOCATIONS:'university,apache',BOOKING_CAPACITY_JSON:'{"university":1,"apache":1}',STRIPE_WEBHOOK_SECRET:'test_webhook_signing_secret',PUBLIC_ORIGIN:'https://hairflix.example'};
+ const env={BOOKING_ENABLED:'true',BOOKING_ACTIVE_LOCATIONS:'university,scottsdale',BOOKING_CAPACITY_JSON:'{"university":1,"scottsdale":1}',STRIPE_WEBHOOK_SECRET:'test_webhook_signing_secret',PUBLIC_ORIGIN:'https://hairflix.example'};
  const payment=async b=>({id:'cs_'+b.id,url:'https://checkout.stripe.com/c/pay/test-only'});
  const app=createBookingApp(env,{store,clock:()=>now,payment});
  const request=async(method,path,body,query={},headers={})=>{const r=await app({method,path,query,headers,body:Buffer.isBuffer(body)?body:Buffer.from(JSON.stringify(body??{})),ip:'127.0.0.1'});return {status:r.status,data:JSON.parse(r.body)};};
@@ -30,8 +30,8 @@ test('unconfigured production does not fabricate availability or accept customer
 });
 test('University prices stay shop-specific and other menus need verified durations',async()=>{
  const t=setup();const {data}=await t.request('GET','/api/config');
- const haircut=data.services.find(s=>s.id==='regular-haircut');assert.equal(haircut.pricesByLocation.university,3300);assert.equal(haircut.pricesByLocation.apache,null);assert.equal(haircut.bookableByLocation.apache,false);
- const r=await t.request('GET','/api/availability',null,{location:'apache',service:'regular-haircut',date:'2026-10-21'});assert.equal(r.data.ready,false);assert.deepEqual(r.data.slots,[]);t.store.close();
+ const haircut=data.services.find(s=>s.id==='regular-haircut');assert.equal(haircut.pricesByLocation.university,3300);assert.equal(haircut.pricesByLocation.scottsdale,null);assert.equal(haircut.bookableByLocation.scottsdale,false);assert.deepEqual(data.locations.map(l=>l.id),['university','scottsdale']);
+ const r=await t.request('GET','/api/availability',null,{location:'scottsdale',service:'regular-haircut',date:'2026-10-21'});assert.equal(r.data.ready,false);assert.deepEqual(r.data.slots,[]);t.store.close();
 });
 test('one concurrent hold wins and overlapping services are excluded',async()=>{
  const t=setup();const pair=await Promise.all([t.request('POST','/api/bookings',form()),t.request('POST','/api/bookings',form())]);

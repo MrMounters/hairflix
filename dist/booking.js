@@ -28,7 +28,7 @@ function renderDates(){
  document.querySelectorAll('[data-date]').forEach(e=>e.addEventListener('click',()=>{dateInput.value=e.dataset.date;renderDates();loadSlots()}));
 }
 function message(text,target='#booking-error'){const el=$(target);el.textContent=text;el.hidden=!text}
-function directBooking(){const shop=selectedShop();$('#direct-booking').hidden=false;const call=$('#direct-call');call.href=`tel:${shop.tel}`;call.textContent=`Call ${shop.phone}`;$('#direct-squire').hidden=shop.id==='apache'}
+function directBooking(){const shop=selectedShop();$('#direct-booking').hidden=false;const call=$('#direct-call');call.href=`tel:${shop.tel}`;call.textContent=`Call ${shop.phone}`;$('#direct-squire').hidden=false}
 async function loadSlots(){
  const request=++slotRequest;state.start='';state.slots=[];$('#time-slots').replaceChildren();$('#direct-booking').hidden=true;$('#booking-next').disabled=true;
  if(!dateInput.value||dateInput.value<dateInput.min||dateInput.value>dateInput.max){message('Choose a date within the next 30 days.','#availability-state');return}
