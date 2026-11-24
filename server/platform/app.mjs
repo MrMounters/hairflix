@@ -1999,6 +1999,7 @@ export function createPlatformApp(env = {}, deps = {}) {
           {
             ...capabilities(),
             mode: env.APP_MODE === "pilot" ? "pilot" : "live",
+            release: env.VERCEL_GIT_COMMIT_SHA || null,
             locations: LOCATIONS,
           },
           cors,
