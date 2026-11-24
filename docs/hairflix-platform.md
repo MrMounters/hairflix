@@ -16,7 +16,7 @@ The native Expo app now uses `/api/platform/*` for authenticated shared data. Th
 | Cash and earnings | Explicit staff-confirmed cash receipt; idempotent payment recording; separate tax, tips and service split; tips stay with the performing barber; reports by date/location |
 | Chair rent | Daily/weekly/monthly terms, collection day, manual due-date invoice creation and confirmed cash settlement; no automatic bank debit |
 | Photos | Barber profile and portfolio uploads; private customer haircut photos/notes; explicit sharing; consent before moderated publication; revocation and deletion |
-| Customers | Staff-created records; CSV/JSON import preview and validation report; duplicate skipping; owner export; explicit merge of imported records |
+| Customers | Staff-created records; CSV file upload/JSON paste (up to 5,000 contacts), Squire header mapping, import preview and validation report; normalized phone/email duplicate skipping; owner CSV download/share; explicit merge of imported records |
 | Growth | Campaign drafts and explicit send confirmation; selected-channel opt-in filtering; worker-generated overdue/winback reminders; no fabricated delivery |
 | Loyalty | Paid-visit stamps and shop-funded credit; reserve against an in-progress ticket, show credit before customer approval, redeem only on payment; protect performing barber’s original commission |
 | Notifications | Durable recipient-specific inbox and unread status; push token registration; outbox; worker leases, blocked/accepted/failed/uncertain statuses; Expo receipt polling |
@@ -104,3 +104,11 @@ npx expo export --platform all
 ```
 
 Integration tests cover authorization, scoped revisions, atomic booking conflicts, service snapshots, absence/reassignment and performing-barber compensation, per-user unread state, appointment cards, private media/notes, approval/cash boundaries, financial idempotency, marketing preferences, import validation, persistent SQLite records, schedule locks and shop-funded reward accounting. UI checks exercise owner activation, saving/reopening settings, staff invitations and widths 320–768px.
+
+## Owner contact transfers
+
+Open **Settings → Customers → Import contacts from CSV file**. Select a Squire customer report or standard Name/Email/Phone CSV, review the first rows, then confirm. Imports preserve notes and last-visit/source metadata as history, not new paid appointments. Existing matching contacts are skipped; opt-out suppressions are retained conservatively, including on matches. Imported contacts are not automatically subscribed to marketing.
+
+**Export contacts as CSV** downloads a file in the browser or opens the native share/save sheet on iPhone/Android. Export includes the source history and opt-out flags; spreadsheet formula prefixes are escaped. Transfers require owner access. Search limits the rendered list to 50 matches, with merge choices limited to 20 search matches. File limit: 750 KB, up to 5,000 rows, within the API request size limit.
+
+The supplied report was tested only in an isolated in-memory database. The private CSV is not committed or bundled, and it has not been imported into a live database.

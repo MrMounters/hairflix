@@ -633,3 +633,47 @@ test("signing out one phone revokes only its session and push registration", asy
     true,
   );
 });
+
+test("owner contact imports support full reports, preserve history and suppressions, and deduplicate US phones", async (t) => {
+  const f = await fixture(t);
+  const rows = Array.from({ length: 1078 }, (_, i) => ({
+    name: "Fictional contact " + i,
+    email: "contact" + i + "@example.test",
+    phone: "",
+    notes: "Imported note",
+    lastVisitDate: "2026-01-01",
+    smsOptOut: "Yes",
+  }));
+  const result = await f.act(f.owner, "customers.import", { rows });
+  assert.equal(result.result.created, 1078);
+  const customer = (
+    await f.req("state", null, f.owner.token)
+  ).state.customers.find((c) => c.name === "Fictional contact 0");
+  assert.equal(customer.importedDetails.lastVisitDate, "2026-01-01");
+  assert.equal(customer.notes, "Imported note");
+  assert.equal(customer.contactOptOut.sms, true);
+  assert.equal(customer.marketingConsent, false);
+  await f.act(f.owner, "customers.import", {
+    rows: [{ name: "Phone one", phone: "(480) 555-0100" }],
+  });
+  const duplicate = await f.act(f.owner, "customers.import", {
+    rows: [
+      {
+        name: "Phone duplicate",
+        phone: "+1 480 555 0100",
+        emailOptOut: "true",
+      },
+    ],
+  });
+  assert.equal(duplicate.result.duplicates, 1);
+  assert.equal((await f.req("export", null, f.barber.token)).status, 403);
+  const exported = (await f.req("export", null, f.owner.token)).customers;
+  assert.equal(
+    exported.find((c) => c.name === "Phone one").contactOptOut.email,
+    true,
+  );
+  assert.equal(
+    exported.find((c) => c.name === "Fictional contact 0").notes,
+    "Imported note",
+  );
+});

@@ -1,5 +1,9 @@
+import * as DocumentPicker from "expo-document-picker";
+import { File, Paths } from "expo-file-system";
+import * as Sharing from "expo-sharing";
+import { parseCustomers, contactsCsv } from "./contacts";
 import React, { useState } from "react";
-import { Text, View, Share, Alert } from "react-native";
+import { Text, View, Share, Alert, Platform } from "react-native";
 import { Button, Card, Field, Title, Line, Chip, s } from "./ui";
 import { usePlatform, RecordData } from "./client";
 import { Picker, useSubmit, dollars, dateNow } from "./flows";
@@ -158,47 +162,8 @@ export function Team({ onProfile }: { onProfile: (id: string) => void }) {
     </>
   );
 }
-// CSV importer supports quoted commas, newlines and escaped double quotes.
-export function parseCustomers(text: string): RecordData[] {
-  if (text.trim().startsWith("[")) {
-    const v = JSON.parse(text);
-    if (!Array.isArray(v)) throw Error("Expected customer rows.");
-    return v;
-  }
-  const rows: string[][] = [];
-  let row: string[] = [],
-    field = "",
-    quoted = false;
-  for (let i = 0; i < text.length; i++) {
-    const ch = text[i];
-    if (ch === '"') {
-      if (quoted && text[i + 1] === '"') {
-        field += '"';
-        i++;
-      } else quoted = !quoted;
-    } else if (ch === "," && !quoted) {
-      row.push(field);
-      field = "";
-    } else if ((ch === "\n" || ch === "\r") && !quoted) {
-      if (ch === "\r" && text[i + 1] === "\n") i++;
-      row.push(field);
-      if (row.some((x) => x.trim())) rows.push(row);
-      row = [];
-      field = "";
-    } else field += ch;
-  }
-  if (quoted) throw Error("Close the quoted CSV field.");
-  row.push(field);
-  if (row.some((x) => x.trim())) rows.push(row);
-  const header = rows.shift()?.map((x) => x.trim().toLowerCase());
-  if (!header?.includes("name"))
-    throw Error("CSV needs name, email, phone column headers.");
-  return rows.map((r) =>
-    Object.fromEntries(header.map((k, i) => [k, r[i]?.trim() || ""])),
-  );
-}
 export function Customers() {
-  const { snapshot, request } = usePlatform(),
+  const { snapshot, request, act } = usePlatform(),
     { state, user } = snapshot!,
     { send, error, busy } = useSubmit(),
     [name, N] = useState(""),
@@ -209,41 +174,130 @@ export function Customers() {
     [report, R] = useState<RecordData | null>(null),
     [keep, K] = useState(""),
     [remove, M] = useState(""),
-    [localError, X] = useState("");
+    [localError, X] = useState(""),
+    [transferring, Q] = useState(false),
+    [search, Search] = useState(""),
+    [showMerge, ShowMerge] = useState(false);
+  const previewText = (text: string) => {
+    const rows = parseCustomers(text);
+    if (!rows.length || rows.length > 5000)
+      throw Error("Import 1–5,000 contacts per file.");
+    if (
+      encodeURIComponent(JSON.stringify(rows)).replace(/%[A-F\d]{2}/gi, "x")
+        .length > 750000
+    )
+      throw Error("This file has too much data. Split it into smaller CSVs.");
+    V(rows);
+    R(null);
+  };
+  async function pickFile() {
+    try {
+      X("");
+      Q(true);
+      const result = await DocumentPicker.getDocumentAsync({
+        type: [
+          "text/csv",
+          "text/comma-separated-values",
+          "application/vnd.ms-excel",
+          "application/json",
+          "text/plain",
+        ],
+        copyToCacheDirectory: true,
+      });
+      if (result.canceled) return;
+      const asset = result.assets[0];
+      if ((asset.size || 0) > 750000) throw Error("Choose a CSV under 750 KB.");
+      const text =
+        Platform.OS === "web"
+          ? await (asset.file as globalThis.File).text()
+          : await new File(asset.uri).text();
+      C("");
+      previewText(text);
+    } catch (e) {
+      X((e as Error).message);
+    } finally {
+      Q(false);
+    }
+  }
+  async function exportFile() {
+    try {
+      X("");
+      Q(true);
+      const data = await request("export"),
+        csv = contactsCsv(data.customers),
+        filename = "hairflix-contacts-" + dateNow() + ".csv";
+      if (Platform.OS === "web") {
+        const url = URL.createObjectURL(
+          new Blob([csv], { type: "text/csv;charset=utf-8" }),
+        );
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      } else {
+        if (!(await Sharing.isAvailableAsync()))
+          throw Error("File sharing is unavailable on this device.");
+        const file = new File(Paths.cache, filename);
+        file.write(csv);
+        await Sharing.shareAsync(file.uri, {
+          mimeType: "text/csv",
+          UTI: "public.comma-separated-values-text",
+        });
+      }
+    } catch (e) {
+      X((e as Error).message);
+    } finally {
+      Q(false);
+    }
+  }
+  async function confirmImport() {
+    if (!preview) return;
+    try {
+      Q(true);
+      X("");
+      const result = await act("customers.import", { rows: preview });
+      R(result);
+      V(null);
+      C("");
+    } catch (e) {
+      X((e as Error).message);
+    } finally {
+      Q(false);
+    }
+  }
+
   return (
     <>
       <Title title="Customers" />
-      {state.customers.map((x: RecordData) => (
-        <Card key={x.id}>
-          <Text style={s.h2}>{x.name}</Text>
-          <Text style={s.muted}>
-            {x.email || ""} {x.phone || ""}
-          </Text>
-        </Card>
-      ))}
-      <Title title="Add customer" />
-      <Field label="Name" value={name} onChangeText={N} />
-      <Field label="Email" value={email} onChangeText={E} />
-      <Field label="Phone" value={phone} onChangeText={P} />
-      <Button
-        label="Save customer"
-        disabled={busy}
-        onPress={() =>
-          void send("customer.save", { name, email, phone }, () => {
-            N("");
-            E("");
-            P("");
-          })
-        }
-      />
       {user.role === "owner" && (
         <>
           <Title
             title="Import & export"
             sub="Imports do not opt anyone into marketing. Account-linked identities are never merged automatically."
           />
+          <Button
+            label={transferring ? "Working…" : "Import contacts from CSV file"}
+            icon="cloud-upload-outline"
+            disabled={busy || transferring}
+            onPress={() => void pickFile()}
+          />
+          <Button
+            label="Export contacts as CSV"
+            icon="download-outline"
+            secondary
+            disabled={busy || transferring}
+            onPress={() => void exportFile()}
+          />
+          <Text style={s.muted}>
+            Supports Squire customer reports and standard Name, Email, Phone
+            CSVs. Preview before importing. Duplicate email addresses or phone
+            numbers are skipped.
+          </Text>
           <Field
-            label="Paste CSV (name,email,phone) or JSON rows"
+            label="Or paste CSV / JSON"
             multiline
             value={csv}
             onChangeText={(v) => {
@@ -257,10 +311,7 @@ export function Customers() {
             onPress={() => {
               try {
                 X("");
-                const rows = parseCustomers(csv);
-                if (!rows.length || rows.length > 500)
-                  throw Error("Import 1–500 customers at a time.");
-                V(rows);
+                previewText(csv);
               } catch (e) {
                 X((e as Error).message);
               }
@@ -278,14 +329,8 @@ export function Customers() {
               ))}
               <Button
                 label="Confirm import"
-                disabled={busy}
-                onPress={() =>
-                  void send("customers.import", { rows: preview }, (v) => {
-                    R(v);
-                    V(null);
-                    C("");
-                  })
-                }
+                disabled={busy || transferring}
+                onPress={() => void confirmImport()}
               />
             </Card>
           )}
@@ -303,55 +348,115 @@ export function Customers() {
             </Card>
           )}
           <Button
-            label="Export customer JSON"
-            secondary
-            onPress={() =>
-              request("export")
-                .then((v) =>
-                  Share.share({ message: JSON.stringify(v, null, 2) }),
-                )
-                .catch((e) => X(e.message))
+            label={
+              showMerge ? "Hide duplicate merge" : "Merge duplicate contacts"
             }
-          />
-          <Title title="Merge duplicate imports" />
-          <Picker
-            label="Keep customer"
-            items={state.customers.filter((x: RecordData) => !x.userId)}
-            value={keep}
-            onChange={K}
-          />
-          <Picker
-            label="Remove duplicate"
-            items={state.customers.filter(
-              (x: RecordData) => !x.userId && x.id !== keep,
-            )}
-            value={remove}
-            onChange={M}
-          />
-          <Button
-            label="Merge selected duplicates"
             secondary
-            disabled={busy || !keep || !remove}
-            onPress={() =>
-              Alert.alert(
-                "Merge records?",
-                "Visits, messages and ledger references move to the kept record. This cannot be automatically undone.",
-                [
-                  { text: "Back" },
-                  {
-                    text: "Merge",
-                    onPress: () =>
-                      void send("customer.merge", {
-                        keepId: keep,
-                        removeId: remove,
-                      }),
-                  },
-                ],
-              )
-            }
+            onPress={() => ShowMerge(!showMerge)}
           />
+          {showMerge && (
+            <>
+              <Field
+                label="Find contacts to merge"
+                value={search}
+                onChangeText={Search}
+              />
+              <Text style={s.muted}>
+                Showing up to 20 matches. Search by name, email or phone.
+              </Text>{" "}
+              <Title title="Merge duplicate imports" />
+              <Picker
+                label="Keep customer"
+                items={state.customers
+                  .filter(
+                    (x: RecordData) =>
+                      !x.userId &&
+                      [x.name, x.email, x.phone]
+                        .join(" ")
+                        .toLowerCase()
+                        .includes(search.toLowerCase()),
+                  )
+                  .slice(0, 20)}
+                value={keep}
+                onChange={K}
+              />
+              <Picker
+                label="Remove duplicate"
+                items={state.customers
+                  .filter(
+                    (x: RecordData) =>
+                      !x.userId &&
+                      x.id !== keep &&
+                      [x.name, x.email, x.phone]
+                        .join(" ")
+                        .toLowerCase()
+                        .includes(search.toLowerCase()),
+                  )
+                  .slice(0, 20)}
+                value={remove}
+                onChange={M}
+              />
+              <Button
+                label="Merge selected duplicates"
+                secondary
+                disabled={busy || !keep || !remove}
+                onPress={() =>
+                  Alert.alert(
+                    "Merge records?",
+                    "Visits, messages and ledger references move to the kept record. This cannot be automatically undone.",
+                    [
+                      { text: "Back" },
+                      {
+                        text: "Merge",
+                        onPress: () =>
+                          void send("customer.merge", {
+                            keepId: keep,
+                            removeId: remove,
+                          }),
+                      },
+                    ],
+                  )
+                }
+              />
+            </>
+          )}
         </>
       )}
+      <Field label="Search contacts" value={search} onChangeText={Search} />
+      <Text style={s.muted}>
+        {state.customers.length} saved contacts · showing up to 50 matches
+      </Text>
+      {state.customers
+        .filter((x: RecordData) =>
+          [x.name, x.email, x.phone]
+            .join(" ")
+            .toLowerCase()
+            .includes(search.toLowerCase()),
+        )
+        .slice(0, 50)
+        .map((x: RecordData) => (
+          <Card key={x.id}>
+            <Text style={s.h2}>{x.name}</Text>
+            <Text style={s.muted}>
+              {x.email || ""} {x.phone || ""}
+            </Text>
+          </Card>
+        ))}
+      <Title title="Add customer" />
+      <Field label="Name" value={name} onChangeText={N} />
+      <Field label="Email" value={email} onChangeText={E} />
+      <Field label="Phone" value={phone} onChangeText={P} />
+      <Button
+        label="Save customer"
+        disabled={busy}
+        onPress={() =>
+          void send("customer.save", { name, email, phone }, () => {
+            N("");
+            E("");
+            P("");
+          })
+        }
+      />
       {!!(error || localError) && (
         <Text style={s.error}>{error || localError}</Text>
       )}

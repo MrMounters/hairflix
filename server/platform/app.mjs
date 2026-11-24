@@ -149,6 +149,11 @@ export function createPlatformApp(env = {}, deps = {}) {
       records[key("notifications", notification.id)] = notification;
       for (const channel of channels) {
         if (
+          marketing &&
+          records[key("customers", userId)]?.contactOptOut?.[channel]
+        )
+          continue;
+        if (
           !prefs[channel] ||
           (type === "message" && !prefs.newMessage) ||
           (type === "booking" && !prefs.booking) ||
@@ -383,8 +388,17 @@ export function createPlatformApp(env = {}, deps = {}) {
                   .allowContactAccess,
             );
           if (u.role === "barber" && !contacts)
-            return { ...x, email: undefined, phone: undefined };
-          return u.role === "customer" ? { ...x, notes: undefined } : x;
+            return {
+              ...x,
+              email: undefined,
+              phone: undefined,
+              importedDetails: undefined,
+            };
+          return u.role === "customer"
+            ? { ...x, notes: undefined, importedDetails: undefined }
+            : u.role === "barber"
+              ? { ...x, importedDetails: undefined }
+              : x;
         });
     if (type === "visits")
       return rows(r, type)
@@ -823,6 +837,12 @@ export function createPlatformApp(env = {}, deps = {}) {
             if (type === "visits") v.client = a.name;
           }
       a.marketingConsent = a.marketingConsent && b.marketingConsent;
+      a.contactOptOut = Object.fromEntries(
+        ["email", "sms", "push"].map((k) => [
+          k,
+          !!a.contactOptOut?.[k] || !!b.contactOptOut?.[k],
+        ]),
+      );
       r[key("customers", b.id)] = undefined;
       delete r[key("customers", b.id)];
       audit(r, u, "customer.merged", a.id, b, a);
@@ -831,8 +851,8 @@ export function createPlatformApp(env = {}, deps = {}) {
     if (type === "customers.import") {
       requireOwner(u);
       check(
-        Array.isArray(p.rows) && p.rows.length > 0 && p.rows.length <= 500,
-        "Import 1–500 rows at a time.",
+        Array.isArray(p.rows) && p.rows.length > 0 && p.rows.length <= 5000,
+        "Import 1–5,000 rows at a time.",
       );
       const result = {
         id: id(),
@@ -842,42 +862,110 @@ export function createPlatformApp(env = {}, deps = {}) {
         duplicates: 0,
         rejected: [],
       };
+      const normalizePhone = (value) => {
+        const digits = String(value || "").replace(/\D/g, "");
+        return digits.length === 10
+          ? "+1" + digits
+          : digits.length === 11 && digits.startsWith("1")
+            ? "+" + digits
+            : digits
+              ? "+" + digits
+              : "";
+      };
+      const emailIndex = new Map(),
+        phoneIndex = new Map();
+      for (const c of rows(r, "customers")) {
+        if (c.email) emailIndex.set(c.email.toLowerCase(), c);
+        if (c.phone) phoneIndex.set(normalizePhone(c.phone), c);
+      }
+      const metadata = [
+        "lastVisitDate",
+        "lastVisitLocation",
+        "locations",
+        "lastService",
+        "lastBarber",
+        "lastPaymentMethod",
+        "lastTipAmount",
+        "acquisitionChannel",
+        "emailOptOut",
+        "smsOptOut",
+        "pushOptOut",
+      ];
+      const optedOut = (value) =>
+        ["true", "yes", "1", "y"].includes(
+          String(value || "")
+            .trim()
+            .toLowerCase(),
+        );
       for (let i = 0; i < p.rows.length; i++) {
-        const row = p.rows[i],
-          name = String(row.name || "").trim(),
-          phone = String(row.phone || "").replace(/[^\d+]/g, ""),
+        const row = p.rows[i];
+        if (!row || typeof row !== "object" || Array.isArray(row)) {
+          result.rejected.push({ row: i + 1, error: "Invalid customer row." });
+          continue;
+        }
+        const name = String(row.name || "").trim(),
           email = String(row.email || "")
             .trim()
-            .toLowerCase();
-        if (!name || name.length > 80) {
+            .toLowerCase(),
+          phone = normalizePhone(row.phone);
+        if (
+          !name ||
+          name.length > 80 ||
+          email.length > 150 ||
+          (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) ||
+          (phone && (phone.length < 8 || phone.length > 16))
+        ) {
           result.rejected.push({
             row: i + 1,
-            error: "A name up to 80 characters is required.",
+            error: "Check name, email and phone format.",
           });
           continue;
         }
-        if (
-          rows(r, "customers").some(
-            (c) =>
-              (email && c.email.toLowerCase() === email) ||
-              (phone && c.phone.replace(/[^\d+]/g, "") === phone),
-          )
-        ) {
+        const matches = [emailIndex.get(email), phoneIndex.get(phone)].filter(
+          Boolean,
+        );
+        const suppressions = {
+          email: optedOut(row.emailOptOut),
+          sms: optedOut(row.smsOptOut),
+          push: optedOut(row.pushOptOut),
+        };
+        if (matches.length) {
           result.duplicates++;
+          for (const c of new Set(matches)) {
+            c.contactOptOut = {
+              email: !!c.contactOptOut?.email || suppressions.email,
+              sms: !!c.contactOptOut?.sms || suppressions.sms,
+              push: !!c.contactOptOut?.push || suppressions.push,
+            };
+          }
           continue;
         }
+        const importedDetails = Object.fromEntries(
+          metadata
+            .filter((k) => row[k] !== undefined)
+            .map((k) => [k, String(row[k]).slice(0, 1000)]),
+        );
         const c = {
           id: id(),
           name,
-          phone: phone.slice(0, 30),
-          email: email.slice(0, 150),
-          notes: "",
+          email,
+          phone,
+          notes: String(row.notes || "").slice(0, 2000),
+          importedDetails,
+          contactOptOut: suppressions,
           marketingConsent: false,
           at: clock(),
         };
         r[key("customers", c.id)] = c;
+        if (email) emailIndex.set(email, c);
+        if (phone) phoneIndex.set(phone, c);
         result.created++;
       }
+      audit(r, u, "customers.imported", result.id, null, {
+        created: result.created,
+        duplicates: result.duplicates,
+        rejected: result.rejected.length,
+      });
       r[key("jobs", result.id)] = result;
       notify(
         r,
@@ -1697,6 +1785,7 @@ export function createPlatformApp(env = {}, deps = {}) {
         const user = r[key("users", customer.userId || customer.id)],
           prefs = preferences(r, user?.id);
         if (!user?.active || !prefs.marketing || !prefs[c.channel]) continue;
+        if (customer.contactOptOut?.[c.channel]) continue;
         const visits = rows(r, "visits").filter(
           (v) =>
             v.customerId === customer.id &&

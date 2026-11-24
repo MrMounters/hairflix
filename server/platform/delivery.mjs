@@ -31,7 +31,9 @@ export async function deliverNotifications({
         !n ||
         !u?.active ||
         !prefs[j.channel] ||
-        (n.marketing && !prefs.marketing) ||
+        (n.marketing &&
+          (!prefs.marketing ||
+            r[key("customers", j.userId)]?.contactOptOut?.[j.channel])) ||
         (n.type === "message" && !prefs.newMessage) ||
         (n.type === "booking" && !prefs.booking) ||
         (n.type === "payment" && !prefs.payments)
